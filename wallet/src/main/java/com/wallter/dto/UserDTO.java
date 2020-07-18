@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class UserDTO {
 	
-	private Long ind;
+	private Long id;
 	@Email(message="Email inválido")
 	private String email;
 	@Length(min=3,max=50,message="O nome deve conter entre 3 e 50 caracteres")
