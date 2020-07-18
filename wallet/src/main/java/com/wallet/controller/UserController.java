@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wallet.dto.UserDTO;
 import com.wallet.entity.User;
 import com.wallet.response.Response;
 import com.wallet.service.UserService;
-import com.wallter.dto.UserDTO;
+import com.wallet.util.Bcrypt;
 
 @RestController
 @RequestMapping("user")
@@ -47,7 +48,10 @@ public class UserController {
 		u.setId(dto.getId());
 		u.setEmail(dto.getEmail());
 		u.setName(dto.getName());
-		u.setPassword(dto.getPassword());
+		//u.setPassword(dto.getPassword());
+		u.setPassword(Bcrypt.getHash(dto.getPassword()));
+		
+		
 		
 		return u;
 	}
@@ -57,7 +61,9 @@ public class UserController {
 		dto.setId(user.getId());
 		dto.setEmail(user.getEmail());
 		dto.setName(user.getName());
-		dto.setPassword(user.getPassword());
+	//	dto.setPassword(user.getPassword()); // retirou para não retornar a senha criada
+		
+		
 		
 		return dto;
 	}

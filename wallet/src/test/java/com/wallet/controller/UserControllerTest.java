@@ -19,9 +19,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wallet.dto.UserDTO;
 import com.wallet.entity.User;
 import com.wallet.service.UserService;
-import com.wallter.dto.UserDTO;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -52,7 +52,8 @@ public class UserControllerTest {
 		.andExpect(status().isCreated())
 		.andExpect(jsonPath("$.data.id").value(ID))
 		.andExpect(jsonPath("$.data.name").value(NAME))
-		.andExpect(jsonPath("$.data.password").value(PASSWORD))
+		//.andExpect(jsonPath("$.data.password").value(PASSWORD))
+		.andExpect(jsonPath("$.data.password").doesNotExist())
 		.andExpect(jsonPath("$.data.email").value(EMAIL));
 	}
 	
