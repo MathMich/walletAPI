@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.Length;
 import lombok.Data;
 
 @Data
-public class WalletItemsDTO {
+public class WalletItemDTO {
 	
 	@NotNull(message="Informe o ID da carteira")
 	private Long id;

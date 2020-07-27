@@ -5,7 +5,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.ConstraintViolationException;
@@ -16,6 +19,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.wallet.entity.Wallet;
@@ -35,7 +42,7 @@ public class WalletItemsRepositoryTest {
 	private static final TypeEnum TYPE = TypeEnum.EN;;
 	private static final String DESCRIPTION = "RECEBIMENTO DIV";
 	private static final BigDecimal VALUE = BigDecimal.valueOf(65);
-	private Long savedWalletItemid = null;
+	private Long savedWalletItemId = null;
 	private Long savedWalletId = null;
 	
 	@Autowired
@@ -55,14 +62,14 @@ public class WalletItemsRepositoryTest {
 		WalletItem wi = new WalletItem(null,w,DATE,TYPE,DESCRIPTION,VALUE);
 		repository.save(wi);
 		
-		savedWalletItemid = wi.getId();
+		savedWalletItemId = wi.getId();
 		savedWalletId = w.getId();
 	}
 	
 	@After
 	public void tearDown() {
 		repository.deleteAll();
-		walletRepository.deleteAll();
+	//	walletRepository.deleteAll();
 	}
 	
 	
@@ -98,7 +105,7 @@ public class WalletItemsRepositoryTest {
 	
 	@Test
 	public void testUpdate() {
-		Optional<WalletItem> wi = repository.findById(savedWalletItemid);
+		Optional<WalletItem> wi = repository.findById(savedWalletItemId);
 		
 		String description = "Descrição alterada";
 		
@@ -108,7 +115,7 @@ public class WalletItemsRepositoryTest {
 
 	    repository.save(changed);
 	    
-	    Optional<WalletItem> newWalletItem = repository.findById(savedWalletItemid);
+	    Optional<WalletItem> newWalletItem = repository.findById(savedWalletItemId);
 	    
 	    assertEquals(description,newWalletItem.get().getDescription());
 	}
@@ -129,6 +136,56 @@ public class WalletItemsRepositoryTest {
 		assertFalse(response.isPresent());
 	}
 	
+	
+	@Test
+	public void testFindBetweenDates() {
+		
+		Optional<Wallet> w = walletRepository.findById(savedWalletId);
+		
+		LocalDateTime localDateTime = DATE.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+		
+		// Adiciona dias
+		Date currentDatePlusFiveDays = Date.from(localDateTime.plusDays(5).atZone(ZoneId.systemDefault()).toInstant());
+		Date currentDatePlusSevenDays = Date.from(localDateTime.plusDays(7).atZone(ZoneId.systemDefault()).toInstant());
+		
+		repository.save(new WalletItem(null, w.get(), currentDatePlusFiveDays,TYPE,DESCRIPTION,VALUE));
+		repository.save(new WalletItem(null, w.get(), currentDatePlusSevenDays,TYPE,DESCRIPTION,VALUE));
+		
+		//  paginação páginas , quantos ítens por página
+		Pageable pg = PageRequest.of(0,10);
+    //	PageRequest pg = new PageRequest(0,10, null);
+		//   Passa a data inicial DATE e data final PlusFiveDays e a paginação
+		Page<WalletItem> response = repository.findAllByWalletIdAndDateGreaterThanEqualAndDateLessThanEqual(savedWalletId,DATE,currentDatePlusFiveDays,pg);
+		
+		assertEquals(response.getContent().size(),2);
+		assertEquals(response.getTotalElements(),2);
+		assertEquals(response.getContent().get(0).getWallet().getId(), savedWalletId);
+		
+		
+	}
+	
+	@Test 
+	public void testFindByType() {
+		List<WalletItem> response = repository.findByWalletIdAndType(savedWalletId, TYPE);
+		
+		// Trazer apenas um resultado da lista
+		assertEquals(response.size(),1);
+		assertEquals(response.get(0).getType(), TYPE);
+		
+	}
+	
+	@Test
+	public void testFindByTypeSd() {
+
+			Optional<Wallet> w = walletRepository.findById(savedWalletId);
+			
+			repository.save(new WalletItem(null,w.get(), DATE, TypeEnum.SD, DESCRIPTION,VALUE));
+			
+			List<WalletItem> response = repository.findByWalletIdAndType(savedWalletId, TypeEnum.SD);
+			
+			assertEquals(response.size(),1);
+			assertEquals(response.get(0).getType(),TypeEnum.SD);
+	}
 	
 	
 	
