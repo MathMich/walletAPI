@@ -1,8 +1,8 @@
-package com.wallet.repository;
+﻿package com.wallet.repository;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,7 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.wallet.entity.Wallet;
@@ -31,16 +31,14 @@ import com.wallet.util.enums.TypeEnum;
 
 
 
-
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
-
+@ActiveProfiles("test")
 public class WalletItemsRepositoryTest {
 
 	private static final Date DATE = new Date(); // Pega a data atual
-	private static final TypeEnum TYPE = TypeEnum.EN;;
-	private static final String DESCRIPTION = "RECEBIMENTO DIV";
+	private static final TypeEnum TYPE = TypeEnum.EN;
+	private static final String DESCRIPTION = "Conta de Luz";
 	private static final BigDecimal VALUE = BigDecimal.valueOf(65);
 	private Long savedWalletItemId = null;
 	private Long savedWalletId = null;
@@ -69,7 +67,7 @@ public class WalletItemsRepositoryTest {
 	@After
 	public void tearDown() {
 		repository.deleteAll();
-	//	walletRepository.deleteAll();
+		walletRepository.deleteAll();
 	}
 	
 	
@@ -78,7 +76,7 @@ public class WalletItemsRepositoryTest {
 		
 		Wallet w = new Wallet();
 		w.setName("Carteira 1");
-		w.setValue(BigDecimal.valueOf(100));
+		w.setValue(BigDecimal.valueOf(500));
 		walletRepository.save(w);
 		
 		

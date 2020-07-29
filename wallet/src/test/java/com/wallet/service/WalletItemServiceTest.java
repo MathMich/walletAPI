@@ -1,7 +1,7 @@
 package com.wallet.service;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -36,12 +36,12 @@ public class WalletItemServiceTest {
 	@MockBean
 	WalletItemRepository repository;
 	
-	@Autowired
-	WalletItemService service;
+    @Autowired
+    WalletItemService service;
 	
 	private static final Date DATE = new Date();
 	private static final TypeEnum TYPE = TypeEnum.EN;
-	private static final String DESCRIPTION = "conta de luz";
+	private static final String DESCRIPTION = "Conta de Luz";
 	private static final BigDecimal VALUE = BigDecimal.valueOf(65);
 	
 	@Test
@@ -56,7 +56,7 @@ public class WalletItemServiceTest {
 		assertEquals(response.getValue().compareTo(VALUE), 0);
 	}
 	
-	@Test
+ 	@Test
 	public void testFindBetweenDates() {
 		List<WalletItem> list = new ArrayList<>();
 		list.add(getMockWalletItem());
@@ -71,6 +71,32 @@ public class WalletItemServiceTest {
 		assertEquals(response.getContent().get(0).getDescription(), DESCRIPTION);
 		
 	}
+
+	@Test
+	public void testFindByType() {
+		List<WalletItem> list = new ArrayList<>();
+		list.add(getMockWalletItem());
+		
+		BDDMockito.given(repository.findByWalletIdAndType(Mockito.anyLong(), Mockito.any(TypeEnum.class))).willReturn(list);
+		
+		List<WalletItem> response = service.findByWalletAndType(1L, TypeEnum.EN);
+		
+		assertNotNull(response);
+		assertEquals(response.get(0).getType(), TYPE);
+	}
+	
+	@Test
+	public void testSumByWallet() {
+		BigDecimal value = BigDecimal.valueOf(45);
+
+		BDDMockito.given(repository.sumByWalletId(Mockito.anyLong())).willReturn(value);
+		
+		BigDecimal response = service.sumByWalletId(1L);
+		
+		assertEquals(response.compareTo(value), 0);
+	}
+	
+	
 	
 	private WalletItem getMockWalletItem() {
 		

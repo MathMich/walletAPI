@@ -21,6 +21,6 @@ public interface WalletItemRepository extends JpaRepository<WalletItem, Long> {
 	
 	// Usando JPQL
 	// quando nativeQuery true não passa pelo Hibernate, aí usa sentença Oracle ou diversos
-	@Query(value = "select sum(value) from WalletItem wi where wi.wallet.id = :wallet",nativeQuery = false)
+	@Query(value = "select sum(value) from WalletItem wi where wi.wallet.id = :wallet")
 	BigDecimal sumByWalletId(@Param("wallet") Long wallet);
 }
