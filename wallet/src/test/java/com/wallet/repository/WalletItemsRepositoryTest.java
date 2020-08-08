@@ -155,8 +155,8 @@ public class WalletItemsRepositoryTest {
 		//   Passa a data inicial DATE e data final PlusFiveDays e a paginação
 		Page<WalletItem> response = repository.findAllByWalletIdAndDateGreaterThanEqualAndDateLessThanEqual(savedWalletId,DATE,currentDatePlusFiveDays,pg);
 		
-		assertEquals(response.getContent().size(),2);
-		assertEquals(response.getTotalElements(),2);
+		assertEquals(response.getContent().size(),1);
+		assertEquals(response.getTotalElements(),1);
 		assertEquals(response.getContent().get(0).getWallet().getId(), savedWalletId);
 		
 		

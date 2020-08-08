@@ -1,8 +1,8 @@
 package com.wallet.repository;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Optional;
 
@@ -12,13 +12,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.wallet.entity.User;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-
+@ActiveProfiles("test")
 public class UserRepositoryTest {
 
 	private static final String EMAIL = "email@teste.com";
@@ -47,7 +48,7 @@ public class UserRepositoryTest {
 	    User u = new User();
 		u.setName("teste");
 		u.setPassword("123456");
-		u.setEmail("test@gmail.com");
+		u.setEmail("teste@teste.com");
 		
 		User response = repository.save(u);
 		
