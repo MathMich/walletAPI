@@ -8,6 +8,10 @@ import com.wallet.entity.UserWallet;
 
 public interface UserWalletRepository extends JpaRepository<UserWallet, Long> {
 
+	//Optional<UserWallet> findByUsersIdAndWalletId(Long user, Long wallet);
+	// Para restringir acesso a apenas carteiras do usuário
 	Optional<UserWallet> findByUsersIdAndWalletId(Long user, Long wallet);
+	
+	
 
 }
