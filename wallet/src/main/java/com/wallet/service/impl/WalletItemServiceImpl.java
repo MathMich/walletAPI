@@ -34,6 +34,7 @@ public class WalletItemServiceImpl implements WalletItemService{
     private int itemsPerPage;
     
     @Override
+    @CacheEvict(value = "findByWalletAndType",allEntries = true)
 	public WalletItem save(WalletItem i) {
 		return repository.save(i);
 	}
@@ -50,8 +51,8 @@ public class WalletItemServiceImpl implements WalletItemService{
 	}
 
 	
-   @Override
-	@Cacheable(value = "findByWalletAndType")
+    @Override
+	@Cacheable(value = "findByWalletAndType") // informa qual cache vai ser usado que está no Ehcache
 	public List<WalletItem> findByWalletAndType(Long wallet, TypeEnum type) {
 		return repository.findByWalletIdAndType(wallet, type);
 	}
@@ -67,6 +68,7 @@ public class WalletItemServiceImpl implements WalletItemService{
 	}
 
 	@Override
+	// CacheEvict sempre que chamar ele apaga todas as entradas de cache
 	@CacheEvict(value = "findByWalletAndType", allEntries = true)
 	public void deleteById(Long id) {
 		repository.deleteById(id);

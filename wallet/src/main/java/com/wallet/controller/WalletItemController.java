@@ -49,6 +49,7 @@ public class WalletItemController {
 	@Autowired
 	private UserWalletService userWalletService;
 	
+	
 	private static final Logger log = LoggerFactory.getLogger(WalletItemController.class);
 
 	@PostMapping
@@ -96,6 +97,7 @@ public class WalletItemController {
 	public ResponseEntity<Response<List<WalletItemDTO>>> findByWalletIdAndType(@PathVariable("wallet") Long wallet,
 			@RequestParam("type") String type) {
 		
+		// adicionou o log pra usar no cache
 		log.info("Buscando por carteira {} e tipo {}", wallet, type);
 		
 		Response<List<WalletItemDTO>> response = new Response<List<WalletItemDTO>>();
